@@ -91,7 +91,32 @@ A real production system includes mechanisms for bid scaling to regulate budget 
 
 ### Experiment
 
+To validate results let's run some synthetic auction simulations. Although real production systems are much more complex envoronment it is usefult to measure possible outcomes on vanila examples.
+
+![](/assets/images/self-stealing/bid-feedback-delays.png)
+*fig 4. How feedback delay and bid intervals are related*
+{: style="color:gray; font-size: 80%; text-align:center;"}
+
+The goal is to measure how some indicators are affected by ratio between *average feedback delay* and *average bid interval*. If *average feedback delay $$\texttt{>>}$$ average bid interval* one can expect major effect from self-stealing. And vice-versa, if *average feedback delay $$\texttt{<<}$$ average bid interval* - self-stealing is not expected to occur
+
+![](/assets/images/self-stealing/plot-bid-scaling-increase.png){:style="display:block; margin-left:auto; margin-right:auto"}
+
+*fig 5. How bids are boosted depending on time ratio*
+{: style="color:gray; font-size: 80%; text-align:center;"}
+
+When feedback delays are huge - as expected bids scaled signficantly to meet a budget requirement
+
+![](/assets/images/self-stealing/plot-cpa-improvement.png){:style="display:block; margin-left:auto; margin-right:auto"}
+
+*fig 6. How CPA are improved depending on time ratio*
+{: style="color:gray; font-size: 80%; text-align:center;"}
+
+When the feedback delays are relatively high compared to the average interval between bids, those adjustments can yield percentages improvement in KPI
+
+
 ## Conclusion
+
+Environments with relatively high feedback delays present various challenges and also increase the difficulty level of modelling. We considered the effects of 'self-stealing' and the negative consequences it can produce. We have also proposed a workaround that not only has an intuitive explanation but can also be easily deployed in the production system. Additionally, we conducted synthetic simulations to demonstrate that under certain conditions, the effects of 'self-stealing' could be significant
 
 ## References
 
