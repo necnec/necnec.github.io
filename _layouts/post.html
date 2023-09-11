@@ -8,7 +8,7 @@ layout: default
   {% if page.comments != false and site.comments.isso or site.comments.disqus %}
     <hr>
     {% if site.comments.isso_domain %}<div id="isso-thread"></div>{% endif %}
-    {% if site.comments.disqus_shortname %}<div id="disqus_thread"></div>{% endif %}
+    {% if site.comments.disqus_shortname %}<script id="dsq-count-scr" src="https://{{ site.comments.disqus_shortname }}.disqus.com/count.js" async></script>{% endif %}
     <noscript>Please enable JavaScript to view comments.</noscript>
   {% endif %}
 </article>
