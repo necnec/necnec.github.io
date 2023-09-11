@@ -1,5 +1,6 @@
 ---
 title:  "Attribution self-stealing in mobile advertising"
+comments: true
 layout: post
 ---
 ![](/assets/images/self-stealing/self-stealing-title.png)
