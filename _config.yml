@@ -1,6 +1,6 @@
 title: "Algorithms, RTB, Recommendations"
 author: "Dmitry Lastovichek"
-description: "Made with <b style=\"color: #f45;\">&lt;3</b>"
+description: " "
 permalink: /:title/
 lang: "en"
 excerpt_separator: "\n\n\n"
@@ -26,7 +26,7 @@ external:                  # shows a footer with social links - for available ic
   - {title: Subscribe, icon: rss, url: "/feed.xml"}
 
 comments:
-#  disqus_shortname: ""    # see https://disqus.com/
+  disqus_shortname: "necnec-github-io"    # see https://disqus.com/
 #  isso_domain: ""         # see https://posativ.org/isso/
 
 plugins:
