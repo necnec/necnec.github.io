@@ -7,7 +7,7 @@ What negative outcomes might arise from high-frequency bidding in environments w
 
 
 ## Introduction
-When initiating an advertising campaign, determining the optimal impression frequency strategy is a crucial step. The ideal frequency cap often depend on various campaign characteristics including the creative format, the budget, the nature of the brand etc. Experts often recommend starting with a heuristic baseline and then modifying the strategy based on the results observed.
+When initiating an advertising campaign, determining the optimal impression frequency strategy is a crucial step. The ideal frequency cap often depend on various campaign characteristics including the creative format, the budget, the nature of the brand etc.
 
 In certain domains, a decision to buy a product might occur several hours or days after seeing the ad. Delays in attribution can also arise due to technical limitations; for instance, in mobile advertising, a user might download the promoted app during the game session, but the installation doesn't register by SDK until the user opens the app for the first time [1].
 
@@ -15,7 +15,7 @@ In certain domains, a decision to buy a product might occur several hours or day
 *fig 1. In mobile advertising, a high attribution delay could be caused by technical limitations*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
-To address this, Mobile Measurement Partners (MMPs) use attribution windows. Usually, a longer gap between the ad impression and attribution indicates a lower likelihood of user engagement with the ad.
+To address this, Mobile Measurement Partners (MMPs) use attribution windows. Usually, a longer gap between the ad impression and attribution indicates a lower likelihood of user converted due to the ad impression.
 
 This issue can create a sort of "attribution races" where the attribution is claimed by the ad network that interacted with the user most recently. For instance, imagine you displayed your ad to a user 5 times in a single day and then chose to stop showing the ad to avoid overexposure (since more impressions might discourage the user from making a purchase). But then, your competitor steps in and displays an 6th ad impression, which results in a sale. In this scenario, you essentially laid the groundwork for their success, potentially paying the price for their triumph.
 
@@ -91,32 +91,38 @@ A real production system includes mechanisms for bid scaling to regulate budget 
 
 ### Experiment
 
-To validate results let's run some synthetic auction simulations. Although real production systems are much more complex envoronment it is usefult to measure possible outcomes on vanila examples.
+To validate results let's run some synthetic auction simulations. Although real production systems are very complex envoronments it is always useful to measure possible effects on vanila examples to "feel" the model.
 
 ![](/assets/images/self-stealing/bid-feedback-delays.png)
 *fig 4. How feedback delay and bid intervals are related*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
-The goal is to measure how some indicators are affected by ratio between *average feedback delay* and *average bid interval*. If *average feedback delay $$\texttt{>>}$$ average bid interval* one can expect major effect from self-stealing. And vice-versa, if *average feedback delay $$\texttt{<<}$$ average bid interval* - self-stealing is not expected to occur
+The goal is to measure how some indicators are affected by ratio between *average feedback delay* and *average bid interval*. 
+- if *average feedback delay $$\texttt{>>}$$ average bid interval* -- one can expect major effect from self-stealing.
+- if *average feedback delay $$\texttt{<<}$$ average bid interval* -- self-stealing is not expected to occur
 
 ![](/assets/images/self-stealing/plot-bid-scaling-increase.png){:style="display:block; margin-left:auto; margin-right:auto"}
 
 *fig 5. How bids are boosted depending on time ratio*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
-When feedback delays are huge - as expected bids scaled signficantly to meet a budget requirement
+As mentioned above, discounding bids with small bid intervals can lead to significant drop in spend. So as expected, if feedback delays are huge - bids scaled signficantly comparing to baseline model (without discounting)
 
 ![](/assets/images/self-stealing/plot-cpa-improvement.png){:style="display:block; margin-left:auto; margin-right:auto"}
 
 *fig 6. How CPA are improved depending on time ratio*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
-When the feedback delays are relatively high compared to the average interval between bids, those adjustments can yield percentages improvement in KPI
+When the feedback delays are relatively high compared to the average interval between bids, those adjustments can yield percentages improvement in KPI.
 
 
 ## Conclusion
 
-Environments with relatively high feedback delays present various challenges and also increase the difficulty level of modelling. We considered the effects of 'self-stealing' and the negative consequences it can produce. We have also proposed a workaround that not only has an intuitive explanation but can also be easily deployed in the production system. Additionally, we conducted synthetic simulations to demonstrate that under certain conditions, the effects of 'self-stealing' could be significant
+Environments with relatively high feedback delays present various challenges and increase the difficulty level of modelling. We considered the effects of 'self-stealing' and the negative consequences it can produce.
+
+On one hand, messed train labels lead to reduced bid intervals, which amplify the effects of self-stealing. On the other hand, we considered a workaround that pulls in a different direction - increasing bid intervals.
+
+Additionally, we conducted synthetic simulations to demonstrate that under certain conditions, the effects of 'self-stealing' could be significant.
 
 ## References
 
