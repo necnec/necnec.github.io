@@ -1,5 +1,5 @@
 ---
-title:  "Attribution self-stealing in mobile advertising"
+title:  "Self-stealing of Attribution in Mobile Advertising"
 layout: post
 ---
 ![](/assets/images/self-stealing/self-stealing-title.png)
@@ -7,9 +7,9 @@ What negative outcomes might arise from high-frequency bidding in environments w
 
 
 ## Introduction
-When initiating an advertising campaign, determining the optimal impression frequency strategy is a crucial step. The ideal frequency cap often depend on various campaign characteristics including the creative format, the budget, the nature of the brand etc.
+When initiating an advertising campaign, determining the optimal impression frequency strategy is a crucial step. The ideal frequency cap often depend on various campaign characteristics including the type of campaign, the creative format, the budget, the nature of the brand etc.
 
-In certain domains, a decision to buy a product might occur several hours or days after seeing the ad. Delays in attribution can also arise due to technical limitations; for instance, in mobile advertising, a user might download the promoted app during the game session, but the installation doesn't register by SDK until the user opens the app for the first time [1].
+In certain domains, a decision to install (buy) a product might occur several hours or days after seeing the ad. Delays in attribution can also arise due to technical limitations; for instance, in mobile advertising, a user might download the promoted app during the game session, but the installation doesn't register by SDK until the user opens the app for the first time [1].
 
 ![](/assets/images/self-stealing/high-install-delay.png)
 *fig 1. In mobile advertising, a high attribution delay could be caused by technical limitations*
@@ -30,8 +30,12 @@ Let's refer back to the example from Figure 1. For a certain user, you receive 4
 
 1. If the user decides to convert after the first impression, we obviously shouldn't bid thereafter. However, our confidence that the user didn't convert increases as the lag from the first impression extends. By bidding after a short delay, the only outcome we might achieve is stealing the attribution from the first impression
 
-2. Another challenge is if you want to build a model that predicts conversion (install), your train labels could be shuffled, and "1" would be assigned to the most recent (4th) impression.
+2. Another challenge is if you want to build a model that predicts conversion (install), your train labels could be misassigned, and "1" would be assigned to the most recent (4th) impression.
 If you use such feature as "delay since the previous impression" - your model will "learn" to predict higher conversion probability straight after the previous impression. And the first impression in batch would be undervalued. Technically everything is correct: usually batch of two bids are more likely lead to attribution, but you spend twice. And due to selection bias your further trainset releases would be even stronger suffered from self-stealing.
+
+![](/assets/images/self-stealing/trainset-misassignment.png)
+*fig 3. Conversion always assigned to the latest impression in the batch*
+{: style="color:gray; font-size: 80%; text-align:center;"}
 
 ## Impression value discounting
 
@@ -78,10 +82,10 @@ $$
 $$
 
 ![](/assets/images/self-stealing/value-discount.png)
-*fig 3. The larger $$t_2-t_1$$ the smaller a discount*
+*fig 4. The larger $$t_2-t_1$$ the smaller a discount*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
-In a production system, implementing this adjustment could be quite straightforward. One would simply need to store the delay time from the previous impression and the value of that previous impression.
+In a production system, implementing this adjustment could be quite straightforward. One would simply need to store the delay time from the previous impression, the value of that previous impression and also build a model that evaluates $$\lambda(x)$$ for each particular bid request [2]
 
 ## Budget constraint
 
@@ -94,7 +98,7 @@ A real production system includes mechanisms for bid scaling to regulate budget 
 To validate results let's run some synthetic auction simulations. Although real production systems are very complex envoronments it is always useful to measure possible effects on vanila examples to "feel" the model.
 
 ![](/assets/images/self-stealing/bid-feedback-delays.png)
-*fig 4. How feedback delay and bid intervals are related*
+*fig 5. How feedback delay and bid intervals are related*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
 The goal is to measure how some indicators are affected by ratio between *average feedback delay* and *average bid interval*. 
@@ -103,26 +107,27 @@ The goal is to measure how some indicators are affected by ratio between *averag
 
 ![](/assets/images/self-stealing/plot-bid-scaling-increase.png){:style="display:block; margin-left:auto; margin-right:auto"}
 
-*fig 5. How bids are boosted depending on time ratio*
+*fig 6. How bids are boosted depending on time ratio*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
+The `bid scaling ratio` is a multiplier applied to the bids of the proposed strategy to maintain the same spending level as the default strategy.
 As mentioned above, discounding bids with small bid intervals can lead to significant drop in spend. So as expected, if feedback delays are huge - bids scaled signficantly comparing to baseline model (without discounting)
 
 ![](/assets/images/self-stealing/plot-cpa-improvement.png){:style="display:block; margin-left:auto; margin-right:auto"}
 
-*fig 6. How CPA are improved depending on time ratio*
+*fig 7. How CPA are improved depending on time ratio*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
 When the feedback delays are relatively high compared to the average interval between bids, those adjustments can yield percentages improvement in KPI.
 
 
-## Conclusion
+## Takeaways
 
-Environments with relatively high feedback delays present various challenges and increase the difficulty level of modelling. We considered the effects of 'self-stealing' and the negative consequences it can produce.
+1. Bidding environment with relatively high feedback delays or very low bidding interval (high frequency) present various challenges and increase the difficulty level of modelling. We considered the effects of 'self-stealing' and the negative consequences it can produce.
 
-On one hand, messed train labels lead to reduced bid intervals, which amplify the effects of self-stealing. On the other hand, we considered a workaround that pulls in a different direction - increasing bid intervals.
+2. On one hand, messed train labels lead to reduced bid intervals, which amplify the effects of self-stealing. On the other hand, we considered a workaround (bid discounting) that pulls in an opposite direction - increasing bid intervals.
 
-Additionally, we conducted synthetic simulations to demonstrate that under certain conditions, the effects of 'self-stealing' could be significant.
+3. We conducted synthetic simulations to demonstrate that under certain conditions, the effects of 'self-stealing' would be significant.
 
 ## References
 
