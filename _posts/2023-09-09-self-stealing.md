@@ -121,7 +121,7 @@ As mentioned above, discounding bids with small bid intervals can lead to signif
 When the feedback delays are relatively high compared to the average interval between bids, those adjustments can yield percentages improvement in KPI.
 
 
-## Takeaways
+## Takeaway
 
 1. Bidding environment with relatively high feedback delays or very low bidding interval (high frequency) present various challenges and increase the difficulty level of modelling. We considered the effects of 'self-stealing' and the negative consequences it can produce.
 

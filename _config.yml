@@ -1,10 +1,10 @@
-title: "Algorithms, RTB, Recommendations"
+title: "Target & Tech: Inside Ad Algorithms"
 author: "Dmitry Lastovichek"
-description: " "
+description: ""
 permalink: /:title/
 lang: "en"
 excerpt_separator: "\n\n\n"
-date_format: "%B %d, %Y"
+date_format: "%B %Y"
 
 # Layout
 
@@ -17,11 +17,12 @@ mathjax: true
 # Menu
 
 navigation:                # accepts {file, title, url, icon, sidebaricon}
-  - {file: "index.html"}
+  # - {file: "index.html"}
   - {file: "README.md"}
 
 external:                  # shows a footer with social links - for available icons see fontawesome.com/icons
   - {title: Mail, icon: envelope, url: "mailto:lastovichekdv@gmail.com"}
+  - {title: LinkedIn, icon: linkedin, url: "https://www.linkedin.com/in/lastovichek"}
   - {title: Github, icon: github, url: "https://github.com/necnec"}
   - {title: Subscribe, icon: rss, url: "/feed.xml"}
 
@@ -31,3 +32,8 @@ comments:
 
 plugins:
  - jekyll-feed
+
+# Apply this change to _config.yml file
+kramdown:
+  # parse markdown inside block-level HTML tag
+  parse_block_html: true

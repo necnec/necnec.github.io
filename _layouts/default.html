@@ -30,7 +30,8 @@
 {% endif %}
 
 <header>
-  <a href="{{ "/" | relative_url }}" class="title">{{ site.title | escape }}</a>
+  
+  <a href="{{ "/" | relative_url }}" class="title"><div style="align-items: center; display: flex"><img src="/assets/auction96.png" width="30" height="30" style="margin-right: 5px"/>{{ site.title | escape }}</div></a>
   {% include menu.html menu=pages %}
 </header>
 
