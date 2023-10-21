@@ -2,7 +2,7 @@
 title:  "Self-stealing of Attribution in Mobile Advertising"
 layout: post
 ---
-![](/assets/images/self-stealing/self-stealing-title.png)
+![](/assets/images/self-stealing/self-stealing-title.jpg)
 What negative outcomes might arise from high-frequency bidding in environments with significant feedback delays?
 
 
@@ -15,7 +15,7 @@ In certain domains, a decision to install (buy) a product might occur several ho
 *fig 1. In mobile advertising, a high attribution delay could be caused by technical limitations*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
-To address this, Mobile Measurement Partners (MMPs) use attribution windows. Usually, a longer gap between the ad impression and attribution indicates a lower likelihood of user converted due to the ad impression.
+To address this, Mobile Measurement Partners (MMPs) use attribution windows [2]. Usually, a longer gap between the ad impression and attribution indicates a lower likelihood of user converted due to the ad impression.
 
 This issue can create a sort of "attribution races" where the attribution is claimed by the ad network that interacted with the user most recently. For instance, imagine you displayed your ad to a user 5 times in a single day and then chose to stop showing the ad to avoid overexposure (since more impressions might discourage the user from making a purchase). But then, your competitor steps in and displays an 6th ad impression, which results in a sale. In this scenario, you essentially laid the groundwork for their success, potentially paying the price for their triumph.
 
@@ -31,7 +31,7 @@ Let's refer back to the example from Figure 1. For a certain user, you receive 4
 1. If the user decides to convert after the first impression, we obviously shouldn't bid thereafter. However, our confidence that the user didn't convert increases as the lag from the first impression extends. By bidding after a short delay, the only outcome we might achieve is stealing the attribution from the first impression
 
 2. Another challenge is if you want to build a model that predicts conversion (install), your train labels could be misassigned, and "1" would be assigned to the most recent (4th) impression.
-If you use such feature as "delay since the previous impression" - your model will "learn" to predict higher conversion probability straight after the previous impression. And the first impression in batch would be undervalued. Technically everything is correct: usually batch of two bids are more likely lead to attribution, but you spend twice. And due to selection bias your further trainset releases would be even stronger suffered from self-stealing.
+If you use such feature as "delay since the previous impression" - your model will "learn" to predict higher conversion probability straight after the previous impression **and therefore bid frequency will increase**. And the first impression in batch would be undervalued. Technically everything is correct: usually batch of two bids are more likely lead to attribution, but you spend twice. And due to selection bias your further trainset releases would be even stronger suffered from self-stealing.
 
 ![](/assets/images/self-stealing/trainset-misassignment.png)
 *fig 3. Conversion always assigned to the latest impression in the batch*
@@ -41,7 +41,7 @@ If you use such feature as "delay since the previous impression" - your mode
 
 Let's consider two consecutive bid requests for a certain user at moments $$t_1$$ and $$t_2$$. We have also evaluated impression values $$v_1=v(x_1)$$ and $$v_2=v(x_2)$$. Here, by $$x$$ we are considering all features and contextual information available at the bidding time.
 
-**A.** For modeling delayed feedback the one common choice is exponential distribution [2]. So if impression occured at time $$t_0$$, then conversion probability at time $$t$$ is:
+**A.** For modeling delayed feedback the one common choice is exponential distribution [3]. So if impression occured at time $$t_0$$, then conversion probability at time $$t$$ is:
 
 $$
 p(x, t) = p_0(x) e^{-\lambda(t-t_0)}/\lambda
@@ -59,7 +59,7 @@ One can interpret this formula as follows: once an impression is generated, it h
 - **not to bid:** $$bid_2=0$$, expected value of this action is $$v(x_1)e^{-\lambda(t_2-t_1)}$$
 - **to bid:** $$bid_2=b^*$$, expected value of this action is $$v(x_2)$$
 
-How to decide about $$b^*$$? The one approach is to maximize expected utility. But firstly, let note that "not to bid" is also have place even if $$bid_2>0$$ but we didn't win the auction. So if win probability function is $$w(b)$$ then, our expected utility is:
+How to decide about $$b^*$$? The one approach is to maximize expected utility. But firstly, let note that "not to bid" is also have place even if $$bid_2>0$$ but we didn't win the auction. So if probability of win is a function $$w(b)$$ then, our expected utility is:
 
 $$
 \begin{aligned}
@@ -85,7 +85,7 @@ $$
 *fig 4. The larger $$t_2-t_1$$ the smaller a discount*
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
-In a production system, implementing this adjustment could be quite straightforward. One would simply need to store the delay time from the previous impression, the value of that previous impression and also build a model that evaluates $$\lambda(x)$$ for each particular bid request [2]
+In a production system, implementing such adjustment could be quite straightforward. One would simply need to store the delay time from the previous impression, the value of that previous impression and also build a model that evaluates $$\lambda(x)$$ for each particular bid request [3]
 
 ## Budget constraint
 
@@ -111,7 +111,7 @@ The goal is to measure how some indicators are affected by ratio between *averag
 {: style="color:gray; font-size: 80%; text-align:center;"}
 
 The `bid scaling ratio` is a multiplier applied to the bids of the proposed strategy to maintain the same spending level as the default strategy.
-As mentioned above, discounding bids with small bid intervals can lead to significant drop in spend. So as expected, if feedback delays are huge - bids scaled signficantly comparing to baseline model (without discounting)
+As mentioned above, discounting bids with small bid intervals can lead to significant drop in spend. So as expected, if feedback delays are huge - bids scaled signficantly comparing to baseline model (without discounting)
 
 ![](/assets/images/self-stealing/plot-cpa-improvement.png){:style="display:block; margin-left:auto; margin-right:auto"}
 
@@ -132,4 +132,5 @@ When the feedback delays are relatively high compared to the average interval be
 ## References
 
 1. [Understanding Singular Mobile App Attribution](https://support.singular.net/hc/en-us/articles/115000526963-Understanding-Singular-Mobile-App-Attribution)
-2. [Modeling delayed feedback in display advertising. *O. Chapelle*](https://dl.acm.org/doi/abs/10.1145/2623330.2623634)
+2. [What is an attribution window?](https://www.adjust.com/glossary/attribution-window/)
+3. [Modeling delayed feedback in display advertising. *O. Chapelle*](https://dl.acm.org/doi/abs/10.1145/2623330.2623634)
