@@ -2,7 +2,8 @@
 title:  "Self-stealing of Attribution in Mobile Advertising"
 layout: post
 ---
-![](/assets/images/self-stealing/self-stealing-title.jpg)
+![](/assets/images/self-stealing/self-stealing-title.jpg){:height="25px"}
+
 What negative outcomes might arise from high-frequency bidding in environments with significant feedback delays?
 
 
@@ -28,7 +29,7 @@ Navigating attribution races can be quite challenging, as this is a game with in
 ## Self-stealing
 Let's refer back to the example from Figure 1. For a certain user, you receive 4 bid requests consecutively. What could potentially go wrong when you aim to evaluate the bid price for the 2nd, 3rd, and 4th bid requests?
 
-1. If the user decides to convert after the first impression, we obviously shouldn't bid thereafter. However, our confidence that the user didn't convert increases as the lag from the first impression extends. By bidding after a short delay, the only outcome we might achieve is stealing the attribution from the first impression
+1. If the user decides to convert after the first impression, we obviously shouldn't bid thereafter. However, our confidence that the user didn't convert increases as the lag from the first impression extends. By bidding after a short delay, the only outcome we might achieve is **stealing the attribution from the first impression**
 
 2. Another challenge is if you want to build a model that predicts conversion (install), your train labels could be misassigned, and "1" would be assigned to the most recent (4th) impression.
 If you use such feature as "delay since the previous impression" - your model will "learn" to predict higher conversion probability straight after the previous impression **and therefore bid frequency will increase**. And the first impression in batch would be undervalued. Technically everything is correct: usually batch of two bids are more likely lead to attribution, but you spend twice. And due to selection bias your further trainset releases would be even stronger suffered from self-stealing.
@@ -89,7 +90,7 @@ In a production system, implementing such adjustment could be quite straightforw
 
 ## Budget constraint
 
-At first glance, everything appears to be good: we have incorporated a simple discount term that can control the delay between impressions. However, the trade-off is that our algorithm is likely to spend less. Indeed, by discounting our valuations, we may encounter decreased bid prices and win rates, which would naturally result in reduced spending.
+At first glance, everything appears to be good: we have incorporated a simple discount term that can control the delay between impressions. However, the trade-off is that the algorithm is likely to spend less. Indeed, by discounting our valuations, we may encounter decreased bid prices and win rates, which would naturally result in reduced spending.
 
 A real production system includes mechanisms for bid scaling to regulate budget allocation. Clearly, when we integrate a self-regulating discount factor, bid scaling will increase. Consequently, we can anticipate that the new strategy would yield higher bids when the delay from the previous impression is extended, and lower bids in response to frequent bid requests.
 
