@@ -36,7 +36,7 @@ $$
 \max_{b} (\hat{v}_x - b) w(b, x)
 $$
 
-We may think of $$\hat{v}$$ as a $$\lambda$$-adjusted impression value. Intuitively, depending on the budget $$B$$ impression values are scaled to guarantee budget delivery. How to estimate $$\lambda$$ is beyond of scope of this article.
+We may think of $$\hat{v}$$ as a $$\lambda$$-adjusted impression value. Intuitively, depending on the budget $$B$$, impression values are scaled to guarantee budget delivery. Estimation of $$\lambda$$ is beyond of scope of this article.
 
 Next, we will discuss the intuition behind that formula and explore the properties of the resulting bids.
 
@@ -127,7 +127,7 @@ In other words, the strategy accomplishes the following:
 1. It saves money by discounting high-valued inventory closer to market price. (the <span style="color:red">red</span> region)
 2. It reallocates the saved funds to low-valued inventory by increasing their bids. (the <span style="color:blue">blue</span> region)
 
-This way, we not only purchase most of the inventory from the base strategy but also acquire additional low-valued inventory. This also coudld help to explore a new unseen inventory that is not presented in training dataset and therefore algorithm that estimates impression value undervalue it
+This way, we not only purchase most of the inventory from the base strategy but also acquire additional low-valued inventory. This also could help to explore a new unseen inventory that is not presented in the training dataset and therefore user response model undervalues it
 
 ## Takeaway
 

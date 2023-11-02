@@ -2,7 +2,7 @@
 title:  "Self-stealing of Attribution in Mobile Advertising"
 layout: post
 ---
-![](/assets/images/self-stealing/self-stealing-title.jpg){:height="25px"}
+![](/assets/images/self-stealing/self-stealing-title.jpg){: width="650" style="display:block; margin-left:auto; margin-right:auto"}
 
 What negative outcomes might arise from high-frequency bidding in environments with significant feedback delays?
 
