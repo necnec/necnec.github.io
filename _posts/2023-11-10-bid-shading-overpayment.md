@@ -1,5 +1,5 @@
 ---
-title:  "Bid shading. Overpaying (Part 3)"
+title:  "Bid shading. Overpayment (Part 3)"
 layout: post
 ---
 ![](/assets/images/bid-shading-overpaying/bid-shading-overpaying.jpg){: width="650" style="display:block; margin-left:auto; margin-right:auto"}
